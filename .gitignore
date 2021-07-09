@@ -4,3 +4,6 @@ entity*/
 
 # Generated transactions.
 **/transactions/
+
+# Generated upgrade descriptors.
+**/upgrades/

@@ -7,6 +7,7 @@ set -eux
 
 
 source test-staking.sh
+source test-governance.sh
 
 # Current development build of Oasis Core oasis-node binary.
 #OASIS_NODE=oasis-node-dev
@@ -20,6 +21,7 @@ LEDGER_SIGNER_PATH="/home/tadej/Apps/Oasis Core Ledger/oasis_core_ledger_1.2.0_l
 GENESIS_FILE=testnet/genesis.json
 
 TXNS_DIR=testnet/transactions
+UPGRADES_DIR=testnet/upgrades
 
 SSH_NODE_SOCKET_TUNNEL="ssh -L ./internal.sock:/srv/oasis/node/internal.sock oasis@vikunja.ja.nez.si -N"
 NODE_SOCKET=internal.sock
@@ -80,14 +82,18 @@ while read i; do if [ "$i" = $NODE_SOCKET ]; then break; fi; done \
 # Export Ledger signer's entity.
 mkdir $ENTITY1_DIR
 $OASIS_NODE signer export "${LEDGER_SIGNER_FLAGS[@]}"
-# Get entity's account address.
+# Get entity account's address.
 ENTITY1_ADDRESS=$($OASIS_NODE stake pubkey2address --public_key $(cat $ENTITY1_DIR/entity.json | jq .id -r))
-# Get entity's account nonce.
-ENTITY1_NONCE=$($OASIS_NODE stake account nonce --stake.account.address $ENTITY1_ADDRESS)
 
 DST_ADDRESS=oasis1qr6swa6gsp2ukfjcdmka8wrkrwz294t7ev39nrw6
 
 $OASIS_NODE --version
 "$LEDGER_SIGNER_PATH" --version
 
+# Get entity account's nonce.
+ENTITY1_NONCE=$($OASIS_NODE stake account nonce --stake.account.address $ENTITY1_ADDRESS)
 test_staking
+
+# Get entity account's nonce.
+ENTITY1_NONCE=$($OASIS_NODE stake account nonce --stake.account.address $ENTITY1_ADDRESS)
+test_governance
