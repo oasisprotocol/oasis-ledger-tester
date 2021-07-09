@@ -8,6 +8,7 @@ set -eux
 
 source test-staking.sh
 source test-governance.sh
+source test-registry.sh
 
 # Current development build of Oasis Core oasis-node binary.
 #OASIS_NODE=oasis-node-dev
@@ -98,6 +99,9 @@ test_staking
 ENTITY1_NONCE=$($OASIS_NODE stake account nonce --stake.account.address $ENTITY1_ADDRESS)
 test_governance
 
+# Get entity account's nonce.
+ENTITY1_NONCE=$($OASIS_NODE stake account nonce --stake.account.address $ENTITY1_ADDRESS)
+test_registry
+
 # TODO:
-# - Test registry transaction types.
 # - Test metadata registry transaction types.
