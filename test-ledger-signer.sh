@@ -95,3 +95,7 @@ test_staking
 # Get entity account's nonce.
 ENTITY1_NONCE=$($OASIS_NODE stake account nonce --stake.account.address $ENTITY1_ADDRESS)
 test_governance
+
+# TODO:
+# - Test registry transaction types.
+# - Test metadata registry transaction types.
