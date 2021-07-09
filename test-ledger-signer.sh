@@ -35,11 +35,9 @@ SHOW_TXNS=no
 SUBMIT_TXNS=no
 
 # Wallet ID for Nano S initialized with the Zondax's testing mnemonic.
-#LEDGER_WALLET_ID=dba676
+LEDGER_WALLET_ID=dba676
 # Wallet ID for Nano S initialized with the Zondax's second testing mnemonic.
 #LEDGER_WALLET_ID=431fc6
-# Some other mnemonic?
-LEDGER_WALLET_ID=c889eb
 LEDGER_INDEX=0
 LEDGER_SIGNER_CONF="wallet_id:$LEDGER_WALLET_ID,index:$LEDGER_INDEX"
 ENTITY1_DIR=entity-${LEDGER_INDEX}/
