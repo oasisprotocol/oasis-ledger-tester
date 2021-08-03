@@ -50,4 +50,17 @@ test_registry() {
     # ENTITY1_NONCE=$((ENTITY1_NONCE + 1))
     # show_tx $TXN_FILE
     # submit_tx $TXN_FILE
+
+    # TODO: Add oasis-node registy node gen_unfreeze CLI command.
+    # TXN_FILE="$TXNS_DIR/tx_unfreeze_node.json"
+    # $OASIS_NODE registry node gen_unfreeze \
+    #   "${TX_FLAGS[@]}" \
+    #   --transaction.file $TXN_FILE \
+    #   --transaction.nonce $ENTITY1_NONCE \
+    #   --transaction.fee.gas 1000 \
+    #   --transaction.fee.amount 2000
+
+    # ENTITY1_NONCE=$((ENTITY1_NONCE + 1))
+    # show_tx $TXN_FILE
+    # submit_tx $TXN_FILE
 }
