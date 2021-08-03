@@ -1,7 +1,7 @@
 # Common functions.
 
 stake_account_info() {
-  if [[ $SHOW_ACCOUNT_INFO = "yes" ]]; then
+  if [[ ${SHOW_ACCOUNT_INFO:-yes} = "yes" ]]; then
     $OASIS_NODE stake account info \
       -a $ADDR \
       --stake.account.address $ENTITY1_ADDRESS
@@ -10,7 +10,7 @@ stake_account_info() {
 
 show_tx() {
   local tx_file=$1
-  if [[ $SHOW_TXNS = "yes" ]]; then
+  if [[ ${SHOW_TXNS:-yes} = "yes" ]]; then
     $OASIS_NODE consensus show_tx \
       --genesis.file $GENESIS_FILE \
       --transaction.file $tx_file \
@@ -20,7 +20,7 @@ show_tx() {
 
 submit_tx() {
   local tx_file=$1
-  if [[ $SUBMIT_TXNS = "yes" ]]; then
+  if [[ ${SUBMIT_TXNS:-yes} = "yes" ]]; then
     $OASIS_NODE consensus submit_tx \
       -a $ADDR \
       --transaction.file $tx_file
