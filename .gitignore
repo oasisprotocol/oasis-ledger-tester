@@ -8,3 +8,7 @@ node*/
 
 # Generated upgrade descriptors.
 **/upgrades/
+
+# Generated files related to metadata registry.
+registry/
+metadata-registry/

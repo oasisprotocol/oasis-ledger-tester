@@ -9,20 +9,29 @@ set -eux
 source test-staking.sh
 source test-governance.sh
 source test-registry.sh
+source test-metadata-registry.sh
 
+# Oasis Node binary.
 # Current development build of Oasis Core oasis-node binary.
 #OASIS_NODE=oasis-node-dev
 # Official build of Oasis Core oasis-node binary.
 OASIS_NODE=oasis-node-21.2.7
+
+# Ledger Signer binary.
 # Current development build of Oasis Core Ledger ledger-signer binary.
 #LEDGER_SIGNER_PATH=/home/tadej/Oasis/oasis-core-ledger/ledger-signer/ledger-signer
 # Official build of Oasis Core Ledger ledger-signer binary.
 LEDGER_SIGNER_PATH="/home/tadej/Apps/Oasis Core Ledger/oasis_core_ledger_1.2.0_linux_amd64/ledger-signer"
 
+# Oasis Metadata Registry binary.
+# Current development build of oasis-registry binary.
+OASIS_REGISTRY=oasis-registry-dev
+
 GENESIS_FILE=testnet/genesis.json
 
 TXNS_DIR=testnet/transactions
 UPGRADES_DIR=testnet/upgrades
+ENTITY_META_DIR=metadata-registry/entities-meta
 
 SSH_NODE_SOCKET_TUNNEL="ssh -L ./internal.sock:/srv/oasis/node/internal.sock oasis@vikunja.ja.nez.si -N"
 NODE_SOCKET=internal.sock
@@ -77,7 +86,11 @@ echo 1>&2 "Cleaning up from previous runs..."
 rm -rf $ENTITY1_DIR
 rm -rf $NODE1_DIR
 rm -rf $NODE2_DIR
+rm -rf $ENTITY_META_DIR
+rm -rf registry/
 rm -f $NODE_SOCKET
+
+mkdir -p $ENTITY_META_DIR
 
 # Tunnel Oasis Node's socket via SSH.
 $SSH_NODE_SOCKET_TUNNEL &
@@ -108,5 +121,4 @@ test_governance
 ENTITY1_NONCE=$($OASIS_NODE stake account nonce --stake.account.address $ENTITY1_ADDRESS)
 test_registry
 
-# TODO:
-# - Test metadata registry transaction types.
+test_metadata_registry
