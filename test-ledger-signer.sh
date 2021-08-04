@@ -56,6 +56,9 @@ TX_FLAGS=(--genesis.file $GENESIS_FILE
   "${LEDGER_SIGNER_FLAGS[@]}"
 )
 
+NODE1_DIR=node-1/
+NODE2_DIR=node-2/
+
 # Check if required commands are present.
 COMMANDS=(
   inotifywait
@@ -72,6 +75,8 @@ done
 
 echo 1>&2 "Cleaning up from previous runs..."
 rm -rf $ENTITY1_DIR
+rm -rf $NODE1_DIR
+rm -rf $NODE2_DIR
 rm -f $NODE_SOCKET
 
 # Tunnel Oasis Node's socket via SSH.

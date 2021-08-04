@@ -1,6 +1,7 @@
 # Temporary files.
 internal.sock
 entity*/
+node*/
 
 # Generated transactions.
 **/transactions/
