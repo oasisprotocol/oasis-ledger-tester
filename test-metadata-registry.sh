@@ -36,7 +36,7 @@ test_metadata_registry() {
     METADATA_FILE=$ENTITY_META_DIR/entity_invalid.json
     generate_entity_metadata_invalid $METADATA_FILE
     if $OASIS_REGISTRY entity update \
-      "${LEDGER_SIGNER_FLAGS[@]}" \
+      "${SIGNER_FLAGS[@]}" \
       --skip-validation \
       $METADATA_FILE; then
         echo -e 2>&1 "Invalid Entity metadata signing should fail.\n"
@@ -46,6 +46,6 @@ test_metadata_registry() {
     METADATA_FILE=$ENTITY_META_DIR/entity_valid.json
     generate_entity_metadata_valid $METADATA_FILE
     $OASIS_REGISTRY entity update \
-      "${LEDGER_SIGNER_FLAGS[@]}" \
+      "${SIGNER_FLAGS[@]}" \
       $METADATA_FILE
 }

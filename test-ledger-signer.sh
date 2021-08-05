@@ -43,26 +43,37 @@ SHOW_ACCOUNT_INFO=no
 SHOW_TXNS=no
 # Variable indicating whether to submit the generated transactions or not.
 SUBMIT_TXNS=no
+# Variable indicating whether to use the file signer instead of Ledger-based
+# signer or not.
+USE_FILE_SIGNER=no
 
-# Wallet ID for Nano S initialized with the Zondax's testing mnemonic.
-LEDGER_WALLET_ID=dba676
-# Wallet ID for Nano S initialized with the Zondax's second testing mnemonic.
-#LEDGER_WALLET_ID=431fc6
-# Wallet ID for Nano S initialized with Tadej's mnemonic.
-#LEDGER_WALLET_ID=70e0b3
-LEDGER_INDEX=0
-LEDGER_SIGNER_CONF="wallet_id:$LEDGER_WALLET_ID,index:$LEDGER_INDEX"
-ENTITY1_DIR=entity-${LEDGER_INDEX}/
+if [[ ${USE_FILE_SIGNER:-no} = "no" ]]; then
+  # Wallet ID for Nano S initialized with the Zondax's testing mnemonic.
+  LEDGER_WALLET_ID=dba676
+  # Wallet ID for Nano S initialized with the Zondax's second testing mnemonic.
+  #LEDGER_WALLET_ID=431fc6
+  # Wallet ID for Nano S initialized with Tadej's mnemonic.
+  #LEDGER_WALLET_ID=70e0b3
+  LEDGER_INDEX=0
+  LEDGER_SIGNER_CONF="wallet_id:$LEDGER_WALLET_ID,index:$LEDGER_INDEX"
 
-LEDGER_SIGNER_FLAGS=(--signer.dir $ENTITY1_DIR
-  --signer.backend plugin
-  --signer.plugin.name ledger
-  --signer.plugin.path "$LEDGER_SIGNER_PATH"
-  --signer.plugin.config $LEDGER_SIGNER_CONF
-)
+  ENTITY1_DIR=entity-${LEDGER_INDEX}/
+
+  SIGNER_FLAGS=(--signer.dir $ENTITY1_DIR
+    --signer.backend plugin
+    --signer.plugin.name ledger
+    --signer.plugin.path "$LEDGER_SIGNER_PATH"
+    --signer.plugin.config $LEDGER_SIGNER_CONF
+  )
+else
+  ENTITY1_DIR=entity-file-signer/
+
+  SIGNER_FLAGS=(--signer.dir $ENTITY1_DIR
+  )
+fi
 
 TX_FLAGS=(--genesis.file $GENESIS_FILE
-  "${LEDGER_SIGNER_FLAGS[@]}"
+  "${SIGNER_FLAGS[@]}"
 )
 
 NODE1_DIR=node-1/
@@ -98,16 +109,23 @@ $SSH_NODE_SOCKET_TUNNEL &
 while read i; do if [ "$i" = $NODE_SOCKET ]; then break; fi; done \
    < <(inotifywait  -e create,open --format '%f' --quiet "$PWD" --monitor)
 
-# Export Ledger signer's entity.
 mkdir $ENTITY1_DIR
-$OASIS_NODE signer export "${LEDGER_SIGNER_FLAGS[@]}"
+if [[ ${USE_FILE_SIGNER:-no} = "no" ]]; then
+  # Export Ledger signer's entity.
+  $OASIS_NODE signer export "${SIGNER_FLAGS[@]}"
+else
+  # Create a new file-signer based entity.
+  $OASIS_NODE registry entity init "${SIGNER_FLAGS[@]}"
+fi
 # Get entity account's address.
 ENTITY1_ADDRESS=$($OASIS_NODE stake pubkey2address --public_key $(cat $ENTITY1_DIR/entity.json | jq .id -r))
 
 DST_ADDRESS=oasis1qr6swa6gsp2ukfjcdmka8wrkrwz294t7ev39nrw6
 
 $OASIS_NODE --version
-"$LEDGER_SIGNER_PATH" --version
+if [[ ${USE_FILE_SIGNER:-no} = "no" ]]; then
+  "$LEDGER_SIGNER_PATH" --version
+fi
 
 # Get entity account's nonce.
 ENTITY1_NONCE=$($OASIS_NODE stake account nonce --stake.account.address $ENTITY1_ADDRESS)

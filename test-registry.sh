@@ -8,7 +8,7 @@ test_registry() {
     $OASIS_NODE registry node init --datadir $NODE2_DIR --node.entity_id $(cat $ENTITY1_DIR/entity.json | jq .id -r)
     # Update Entity 1 with these 2 Nodes.
     $OASIS_NODE registry entity update \
-    "${LEDGER_SIGNER_FLAGS[@]}" \
+    "${SIGNER_FLAGS[@]}" \
     --entity.node.descriptor $NODE1_DIR/node_genesis.json \
     --entity.node.descriptor $NODE2_DIR/node_genesis.json
 
